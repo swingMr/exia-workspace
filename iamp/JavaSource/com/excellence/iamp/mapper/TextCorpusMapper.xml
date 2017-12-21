@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.TextCorpusDao">
+	<resultMap id="TextCorpus" type="com.excellence.iamp.vo.TextCorpus">  
+	    <id column="corpus_id" property="corpusId" jdbcType="VARCHAR" />  
+	    <result column="corpus_title" property="corpusTitle" jdbcType="VARCHAR" />  
+	    <result column="belong_domain" property="belongDomain" jdbcType="VARCHAR" />  
+	    <result column="key_word" property="keyWord" jdbcType="VARCHAR" />  
+	    <result column="status" property="status" jdbcType="SMALLINT" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>    
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />   
+ 	    <result column="access_path" property="accessPath" jdbcType="VARCHAR" />  
+	</resultMap> 
+	
+	<sql id="conditionFragment">  
+		<where> 1 = 1
+			<if test="corpusTitle !='' and corpusTitle != null"> and corpus_title like "%"#{corpusTitle}"%"</if>
+			<if test="keyWord !='' and keyWord != null"> and key_word like "%"#{keyWord}"%"</if>
+			<if test="belongDomain !='' and belongDomain != null"> and belong_domain  like "%"#{belongDomain}"%"</if>	
+			<if test="status != null"> and status=#{status} </if>
+			<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+			<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+		</where> 
+	</sql>  
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="TextCorpus">
+		select * from IA_Text_Corpus where corpus_id=#{corpusId}
+	</select>
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.TextCorpus" >
+        insert into IA_Text_Corpus(corpus_id,corpus_title,belong_domain,key_word,status,create_date,creator_id,creator_name,access_path,update_date)
+        values(#{corpusId},#{corpusTitle},#{belongDomain},#{keyWord},#{status},#{createDate},#{creatorId},#{creatorName},#{accessPath},#{updateDate});
+    </insert>
+    
+    <!-- 批量插入-->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into IA_Text_Corpus(corpus_id,corpus_title,belong_domain,key_word,status,create_date,creator_id,creator_name,access_path,update_date)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+			(#{item.corpusId},#{item.corpusTitle},#{item.belongDomain},#{item.keyWord},#{item.status},#{item.createDate},#{item.creatorId},#{item.creatorName},#{item.accessPath},#{item.updateDate})
+		</foreach>
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from IA_Text_Corpus
+        where corpus_id=#{corpusId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.TextCorpus">
+        update IA_Text_Corpus set
+        corpus_id=#{corpusId},corpus_title=#{corpusTitle},belong_domain=#{belongDomain},key_word=#{keyWord},status=#{status},create_date=#{createDate},
+        creator_id=#{creatorId},access_path=#{accessPath},update_date=#{updateDate},creator_name=#{creatorName}
+        where corpus_id=#{corpusId}
+    </update>
+    
+    <select id="getByCondition" resultMap="TextCorpus">
+		select * from IA_Text_Corpus
+		<include refid="conditionFragment" />
+	</select>
+	
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from IA_Text_Corpus
+		<include refid="conditionFragment" />
+	</select>
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+        create table IA_Text_Corpus
+		(
+		   corpus_id            varchar(32) not null,
+		   corpus_title         varchar(512),
+		   belong_domain        varchar(256) comment '归属领域的名称，以英文分号作为分割符号',
+		   creator_name         varchar(64),
+		   creator_id           varchar(32),
+		   create_date          datetime,
+		   update_date          datetime comment '记录被更新的最后一次时间',
+		   key_word             varchar(2048) comment '以英文分号作为分割符号',
+		   access_path          varchar(1024),
+		   status               smallint,
+		   primary key (corpus_id)
+		);
+    </update>  
+</mapper>

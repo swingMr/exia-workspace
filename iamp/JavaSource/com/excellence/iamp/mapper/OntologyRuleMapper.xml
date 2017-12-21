@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.OntologyRuleDao">
+	<resultMap id="result" type="com.excellence.iamp.vo.OntologyRule">  
+	    <id column="rule_id" property="ruleId" jdbcType="VARCHAR" />  
+	    <result column="concept_name" property="conceptName" jdbcType="VARCHAR" />  
+	    <result column="concept_id" property="conceptId" jdbcType="VARCHAR" />  
+	    <result column="rule_content" property="ruleContent" jdbcType="VARCHAR" />  
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />  
+	    <result column="status" property="status" jdbcType="SMALLINT" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />  
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />   
+	</resultMap> 
+	
+ 	<sql id="conditionFragment">  
+		<where>
+			<if test="ruleId !='' and ruleId != null">rule_id=#{ruleId}</if>
+			<if test="conceptId !='' and conceptId != null"> and concept_id=#{conceptId} </if>
+			<if test="conceptName !='' and conceptName != null"> and concept_name=#{conceptName}</if>		
+		</where> 
+	</sql>  
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.excellence.iamp.vo.OntologyRule">
+        insert into IA_Ontology_Rule 
+        (
+        	rule_id,concept_name,concept_id,rule_content,remark,status,create_date,creator_id,creator_name
+        )
+        values 
+        (
+	        #{ruleId},#{conceptName}, #{conceptId},#{ruleContent},#{remark},#{status},#{createDate},#{creatorId},#{creatorName}
+        )
+    </insert>
+    
+    <!-- 更新 -->
+	<update id="update" parameterType="com.excellence.iamp.vo.OntologyRule">
+		UPDATE IA_Ontology_Rule 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="conceptName !='' and conceptName != null">concept_name=#{conceptName},</if>
+			<if test="conceptId !='' and conceptId != null">concept_id=#{conceptId},</if>
+			<if test="ruleContent !='' and ruleContent != null">rule_content=#{ruleContent},</if>
+			<if test="remark !='' and remark != null">remark=#{remark},</if>
+			<if test="status !='' and status != null">status=#{status},</if>
+			<if test="createDate !='' and createDate != null">create_date=#{createDate},</if>
+			<if test="creatorId !='' and creatorId != null">creator_id=#{creatorId},</if>
+			<if test="creatorName !='' and creatorName != null">creator_name=#{creatorName},</if>
+		</trim>
+		WHERE
+		rule_id=#{ruleId}
+	</update>
+    
+    <!-- 删除 -->
+    <delete id="delById" parameterType="java.lang.String">
+		DELETE FROM IA_Ontology_Rule 
+		WHERE
+		rule_id=#{ruleId}
+	</delete>
+    
+	<!-- 查询list -->
+	<select id="getList" resultMap="result">
+		select * from IA_Ontology_Rule
+	</select>
+	
+	<!-- 根据条件查询list -->
+	<select id="getOntologyRuleListByCondition" parameterType="java.util.Map" resultMap="result">
+		select * from IA_Ontology_Rule 
+		<include refid="conditionFragment" />
+	</select>
+	
+		<!-- 统计总数 -->
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from IA_Ontology_Rule
+		<include refid="conditionFragment" />
+	</select>
+</mapper>

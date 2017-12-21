@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.excellence.iamp.dao.TaskLogDao" >
+  <resultMap id="BaseResultMap" type="com.excellence.iamp.vo.TaskLog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="log_type" property="logType" jdbcType="INTEGER" />
+    <result column="cost_time" property="costTime" jdbcType="INTEGER" />
+    <result column="task_status" property="taskStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, task_id, task_name, create_date, log_type, cost_time, task_status
+  </sql>
+  
+  <sql id="conditionFragment">  
+		<where> 1 = 1
+			<include refid="condition" />
+		</where> 
+	</sql> 
+	
+	<sql id="condition">
+		<if test="taskId !='' and taskId != null"> and task_id=#{taskId} </if>	
+		<if test="taskName !='' and taskName != null"> and task_time=#{taskName} </if>	
+		<if test="taskStatus !='' and taskStatus != null"> and task_status=#{taskStatus} </if>	
+		<if test="logType !='' and logType != null"> and log_type=#{logType} </if>	
+		<if test="costTime !='' and costTime != null"> and cost_time=#{costTime} </if>	
+		<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+		<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+	</sql>
+  
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ia_task_log
+    where id = #{id,jdbcType=VARCHAR}
+    order by create_date desc
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from ia_task_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.excellence.iamp.vo.TaskLog" >
+    insert into ia_task_log (id, task_id, task_name, 
+      create_date, log_type, cost_time, 
+      task_status)
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{logType,jdbcType=INTEGER}, #{costTime,jdbcType=INTEGER}, 
+      #{taskStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.excellence.iamp.vo.TaskLog" >
+    insert into ia_task_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="taskName != null" >
+        task_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="costTime != null" >
+        cost_time,
+      </if>
+      <if test="taskStatus != null" >
+        task_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null" >
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="costTime != null" >
+        #{costTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStatus != null" >
+        #{taskStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.excellence.iamp.vo.TaskLog" >
+    update ia_task_log
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null" >
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="costTime != null" >
+        cost_time = #{costTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStatus != null" >
+        task_status = #{taskStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.excellence.iamp.vo.TaskLog" >
+    update ia_task_log
+    set task_id = #{taskId,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      log_type = #{logType,jdbcType=INTEGER},
+      cost_time = #{costTime,jdbcType=INTEGER},
+      task_status = #{taskStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_task_log
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="BaseResultMap">
+		select * from ia_task_log
+		<include refid="conditionFragment" />
+		order by create_date desc
+   </select>
+</mapper>

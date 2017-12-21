@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.excellence.iamp.dao.MemberDao" >
+ <!-- <cache readOnly="true" eviction="FIFO"></cache> -->
+  <resultMap id="BaseResultMap" type="com.excellence.iamp.vo.Member" >
+    <id column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="member_account" property="memberAccount" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="qq_num" property="qqNum" jdbcType="VARCHAR" />
+    <result column="email_address" property="emailAddress" jdbcType="VARCHAR" />
+    <result column="member_psw" property="memberPsw" jdbcType="VARCHAR" />
+    <result column="wechat_num" property="wechatNum" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
+    <result column="extend_attribute" property="extendAttribute" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    member_id, member_account, member_name, qq_num, email_address, member_psw, wechat_num, 
+    remark, creator_id, creator_name, create_date, update_date, phone_num, extend_attribute
+  </sql>
+  
+  <sql id="conditionFragment">  
+		<where> 1 = 1
+			<include refid="condition" />
+		</where> 
+	</sql> 
+	
+	<sql id="condition">
+		<if test="memberId !='' and memberId != null"> and member_id=#{memberId} </if>	
+		<if test="memberAccount !='' and memberAccount != null"> and member_account=#{memberAccount} </if>	
+		<if test="memberPsw !='' and memberPsw != null"> and member_psw=#{memberPsw} </if>	
+		<if test="memberName !='' and memberName != null"> and member_name =#{memberName} </if>
+		<if test="qqNum !='' and qqNum != null"> and qq_num=#{qqNum} </if>
+		<if test="emailAddress !='' and emailAddress != null"> and email_address=#{emailAddress} </if>
+		<if test="wechatNum !='' and wechatNum != null"> and wechat_num=#{wechatNum} </if>
+		<if test="remark !='' and remark != null"> and remark like "%"#{remark}"%"</if>
+		<if test="creatorId !='' and creatorId != null"> and creator_id=#{creatorId} </if>
+		<if test="creatorName !='' and creatorName != null"> and creator_name=#{creatorName} </if>
+		<if test="startTime !='' and startTime != null"> and create_date &gt;= #{startTime}</if>
+		<if test="endTime !='' and endTime != null"> and create_date &lt;= #{endTime}</if>
+		<if test="phoneNum !='' and phoneNum != null"> and phone_num = #{phoneNum}</if>
+	</sql>
+	
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ia_member
+    where member_id = #{memberId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from ia_member
+    where member_id = #{memberId,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 批量插入-->
+   <insert id="batchInsert" parameterType="java.util.List">
+       insert into ia_member (member_id, member_account, member_name, 
+	      qq_num, email_address, member_psw, 
+	      wechat_num, remark, creator_id, 
+	      creator_name, create_date, update_date,phone_num,extend_attribute
+	   )
+       values
+       <foreach collection="list" item="item" index="index" separator=",">
+		  (#{item.memberId,jdbcType=VARCHAR}, #{item.memberAccount,jdbcType=VARCHAR}, #{item.memberName,jdbcType=VARCHAR}, 
+	      #{item.qqNum,jdbcType=VARCHAR}, #{item.emailAddress,jdbcType=VARCHAR}, #{item.memberPsw,jdbcType=VARCHAR}, 
+	      #{item.wechatNum,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.creatorId,jdbcType=VARCHAR}, 
+	      #{item.creatorName,jdbcType=VARCHAR}, #{item.createDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP}, #{item.phoneNum,jdbcType=VARCHAR}, #{item.extendAttribute,jdbcType=VARCHAR}
+	      )
+	</foreach>
+   </insert>
+  <insert id="insert" parameterType="com.excellence.iamp.vo.Member" >
+    insert into ia_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="memberAccount != null" >
+        member_account,
+      </if>
+      <if test="memberName != null" >
+        member_name,
+      </if>
+      <if test="qqNum != null" >
+        qq_num,
+      </if>
+      <if test="emailAddress != null" >
+        email_address,
+      </if>
+      <if test="memberPsw != null" >
+        member_psw,
+      </if>
+      <if test="wechatNum != null" >
+        wechat_num,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="creatorName != null" >
+        creator_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="phoneNum != null" >
+        phone_num,
+      </if>
+      <if test="extendAttribute != null" >
+        extend_attribute,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberAccount != null" >
+        #{memberAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null" >
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNum != null" >
+        #{qqNum,jdbcType=VARCHAR},
+      </if>
+      <if test="emailAddress != null" >
+        #{emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPsw != null" >
+        #{memberPsw,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatNum != null" >
+        #{wechatNum,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phoneNum != null" >
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="extendAttribute != null" >
+        #{extendAttribute,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.excellence.iamp.vo.Member" >
+    update ia_member
+    <set >
+      <if test="memberAccount != null" >
+        member_account = #{memberAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null" >
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNum != null" >
+        qq_num = #{qqNum,jdbcType=VARCHAR},
+      </if>
+      <if test="emailAddress != null" >
+        email_address = #{emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPsw != null" >
+        member_psw = #{memberPsw,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatNum != null" >
+        wechat_num = #{wechatNum,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorName != null" >
+        creator_name = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phoneNum != null" >
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="extendAttribute != null" >
+         extend_attribute = #{extendAttribute,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=VARCHAR}
+  </update>
+  <select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_member
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="BaseResultMap">
+		select * from ia_member
+		<include refid="conditionFragment" />
+   </select>
+	
+  <select id="getListExcludeAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from ia_member
+    where member_id not in (select member_id from ia_app_member where app_id = #{appId,jdbcType=VARCHAR})
+    <include refid="condition" />
+  </select>
+  
+   <select id="countExcludeAppId"  resultType="java.lang.Integer" >
+    select count(1) from ia_member
+    where member_id not in (select member_id from ia_app_member where app_id = #{appId,jdbcType=VARCHAR})
+    <include refid="condition" />
+  </select>
+   
+   <update id="createNewTable" parameterType="java.lang.String">  
+        create table IA_Member
+		(
+		   menber_id            varchar(32) not null,
+		   member_account       varchar(32) not null,
+		   member_name          varchar(32) not null,
+		   qq_num               varchar(32),
+		   email_address         varchar(64),
+		   member_psw           varchar(32),
+		   wechat_num           varchar(32),
+		   remark               varchar(256),
+		   creator_id           varchar(32),
+		   creator_name         varchar(64),
+		   create_date          timestamp,
+		   update_date          timestamp,
+		   phone_num          	int(32),
+		   primary key (menber_id)
+		);
+    </update> 
+</mapper>

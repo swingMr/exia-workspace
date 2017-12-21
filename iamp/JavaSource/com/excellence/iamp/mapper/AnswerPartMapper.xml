@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 --> 
+<mapper namespace="com.excellence.iamp.dao.AnswerPartDao">
+	<resultMap id="AnswerPart" type="com.excellence.iamp.robot.vo.AnswerPart">  
+	    <id column="part_id" property="partId" jdbcType="VARCHAR" />
+	    <result column="part_title" property="partTitle" jdbcType="VARCHAR" />  
+	    <result column="part_category" property="partCategory" jdbcType="VARCHAR" />  
+	    <result column="part_rule" property="partRule" jdbcType="SMALLINT" />  
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="part_code" property="partCode" jdbcType="VARCHAR" />  
+	    <result column="part_strategy" property="partStrategy" jdbcType="VARCHAR" />  
+	    <result column="answer_impl_class" property="answerImplClass" jdbcType="VARCHAR" />  
+	    <result column="remote_url" property="remoteUrl" jdbcType="VARCHAR" />  
+	    <result column="timeout" property="timeout" jdbcType="INTEGER" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" /> 
+	</resultMap> 
+	
+ 	<sql id="conditionFragment">  
+		<where> 1=1
+			<if test="partId !='' and partId != null">and part_id=#{partId}</if>		
+			<if test="partTitle !='' and partTitle != null">and part_title = #{partTitle}</if>		
+			<if test="partCategory !='' and partCategory != null">and part_category = #{partCategory}</if>		
+			<if test="partRule !='' and partRule != null">and part_rule=#{partRule}</if>		
+			<if test="creatorId !='' and creatorId != null">and creator_id=#{creatorId}</if>		
+			<if test="creatorName !='' and creatorName != null">and creator_name=#{creatorName}</if>		
+			<if test="partCode !='' and partCode != null">and part_code=#{partCode}</if>
+			<if test="partStrategy !='' and partStrategy != null">and part_strategy=#{partStrategy}</if>
+			<if test="answerImplClass !='' and answerImplClass != null">and answer_impl_class=#{answerImplClass}</if>
+			<if test="remoteUrl !='' and remoteUrl != null">and remote_url=#{remoteUrl}</if>
+		</where> 
+	</sql>  
+	
+	<select id="findById" resultMap="AnswerPart" parameterType="java.lang.String" >
+    select 
+    part_id,part_title,part_category,part_rule,creator_id,creator_name,create_date,part_strategy, part_code,answer_impl_class,remote_url,timeout
+    from ia_answer_part
+    where part_id = #{partId,jdbcType=VARCHAR}
+    order by create_date desc
+  </select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.excellence.iamp.robot.vo.AnswerPart">
+        insert into ia_answer_part 
+        (
+        	 part_id,part_title,part_category,part_rule,creator_id,creator_name,create_date,part_strategy,part_code,answer_impl_class,remote_url,timeout)
+        values 
+        (
+	        #{partId,jdbcType=VARCHAR},#{partTitle,jdbcType=VARCHAR}, #{partCategory,jdbcType=VARCHAR},#{partRule,jdbcType=VARCHAR},
+	        #{creatorId,jdbcType=VARCHAR}, #{creatorName,jdbcType=VARCHAR},#{createDate,jdbcType=TIMESTAMP},#{partStrategy,jdbcType=VARCHAR},
+	        #{partCode,jdbcType=VARCHAR},#{answerImplClass,jdbcType=VARCHAR},#{remoteUrl,jdbcType=VARCHAR},#{timeout,jdbcType=INTEGER}
+	     )
+    </insert>
+    
+    <!-- 更新 -->
+	<update id="update" parameterType="com.excellence.iamp.robot.vo.AnswerPart">
+		UPDATE ia_answer_part SET
+		part_title=#{partTitle,jdbcType=VARCHAR},
+		part_category=#{partCategory,jdbcType=VARCHAR},
+		part_rule=#{partRule,jdbcType=VARCHAR},
+		creator_id=#{creatorId,jdbcType=VARCHAR},
+		creator_name=#{creatorName,jdbcType=VARCHAR},
+		part_code=#{partCode,jdbcType=VARCHAR},
+		part_strategy=#{partStrategy,jdbcType=VARCHAR},
+		answer_impl_class=#{answerImplClass,jdbcType=VARCHAR},
+		remote_url=#{remoteUrl,jdbcType=VARCHAR},
+		timeout=#{timeout,jdbcType=INTEGER},
+		create_date=#{createDate,jdbcType=TIMESTAMP}
+		WHERE
+		part_id=#{partId,jdbcType=VARCHAR}
+	</update>
+    
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+		DELETE FROM ia_answer_part 
+		WHERE
+		part_id=#{partId}
+	</delete> 
+
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_answer_part
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="AnswerPart">
+		select * from ia_answer_part
+		<include refid="conditionFragment" />
+		order by create_date desc
+   </select>
+
+</mapper>

@@ -1,0 +1,107 @@
+var infoBasic = [
+    {
+        "attrName": "id",
+        "attrCName": "系统唯一号",
+        "type": "java.lang.String",
+	"require":true,
+        "remark": "信息资源的全局唯一编号，有系统自动产生。"
+    },
+    {
+        "attrName": "title",
+        "attrCName": "标题",
+        "type": "java.lang.String",
+	"require":true,
+        "remark": "信息资源的标题内容。"
+    },
+    {
+        "attrName": "abstract",
+        "attrCName": "摘要",
+        "type": "java.lang.String",
+	"require":false,
+	"remark": "信息资源的文本摘要，一般在255个汉字内容。"
+    },
+    {
+        "attrName": "issuedNum",
+        "attrCName": "资源编号",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "信息资源业务上的编号，比如：文件编号。"
+    },
+    {
+        "attrName": "genre",
+        "attrCName": "体裁",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "资源归属的体裁，以本体库中的定义为准。"
+    },
+    {
+        "attrName": "granularity",
+        "attrCName": "粒度",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "资源粒度大小，比如：篇、章、段、句等。"
+    },
+    {
+        "attrName": "publishDate",
+        "attrCName": "发布日期",
+        "type": "java.util.Date",
+	"require":true,
+        "remark": "信息资源正式发布的日期。"
+    },
+    {
+        "attrName": "publisherName",
+        "attrCName": "发布者",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "发布信息资源的单位名称。"
+    },
+    {
+        "attrName": "authorName",
+        "attrCName": "作者",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "编写/编制信息资源的个人姓名或单位名称。"
+    },
+    {
+        "attrName": "publishPlace",
+        "attrCName": "发布场所",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "资源发布的平台、网站的名称。"
+    },
+    {
+        "attrName": "relatedDomain",
+        "attrCName": "归属领域",
+        "type": "java.lang.String[]",
+	"require":true,
+        "remark": "资源所在的业务领域。"
+    },
+    {
+        "attrName": "hierarchy",
+        "attrCName": "行政层级",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "信息资源发布单位所在的行政层级，比如：中央、省级、市级、区县、乡镇、社区。默认为：所有层级。"
+    },
+    {
+        "attrName": "keywords",
+        "attrCName": "主题词",
+        "type": "java.lang.String[]",
+	"require":false,
+        "remark": "对信息资源打标签的词。"
+    },
+    {
+        "attrName": "tags",
+        "attrCName": "文本标签",
+        "type": "java.lang.String",
+	"require":false,
+        "remark": "对信息资源打标签数据，参考格式标签JSON格式。"
+    },
+    {
+        "attrName": "createDate",
+        "attrCName": "入库时间",
+        "type": "java.util.Date",
+	"require":true,
+        "remark": "信息资源进入资源库的时间"
+    }
+]

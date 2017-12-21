@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.FileExtConfigDao">
+	<resultMap id="FileExtConfig" type="com.excellence.iamp.vo.FileExtConfig">  
+	    <id column="config_id" property="configId" jdbcType="VARCHAR" />  
+	    <result column="file_count" property="fileCount" jdbcType="INTEGER" />  
+	    <result column="expire_time" property="expireTime" jdbcType="INTEGER" />  
+	    <result column="space_size" property="spaceSize" jdbcType="INTEGER" />  
+	    <result column="txt_ext" property="txtExt" jdbcType="VARCHAR" /> 
+	    <result column="pdf_ext" property="pdfExt" jdbcType="VARCHAR" /> 
+	    <result column="html_ext" property="htmlExt" jdbcType="VARCHAR" /> 
+	    <result column="jpg_ext" property="jpgExt" jdbcType="VARCHAR" /> 
+	     <result column="word_ext" property="wordExt" jdbcType="VARCHAR" /> 
+	    <result column="status" property="status" jdbcType="SMALLINT" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />    
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />   
+	</resultMap> 
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="FileExtConfig">
+		select * from ia_file_ext_config where config_id=#{configId}
+	</select>
+	
+	<select id="getList" parameterType="java.lang.String" resultMap="FileExtConfig">
+		select * from ia_file_ext_config
+	</select>
+	
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.FileExtConfig" >
+        insert into ia_file_ext_config(config_id,file_count,expire_time,space_size,txt_ext,pdf_ext,html_ext,jpg_ext,word_ext,status,create_date,creator_id,creator_name,update_date)
+        values(#{configId},#{fileCount},#{expireTime},#{spaceSize},#{txtExt},#{pdfExt},#{htmlExt},#{jpgExt},#{wordExt},#{status},#{createDate},#{creatorId},#{creatorName},#{updateDate});
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ia_file_ext_config
+        where config_id=#{configId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.FileExtConfig">
+        update ia_file_ext_config set
+        config_id=#{configId},file_count=#{fileCount},expire_time=#{expireTime},space_size=#{spaceSize},txt_ext=#{txtExt},pdf_ext=#{pdfExt},html_ext=#{htmlExt},jpg_ext=#{jpgExt},word_ext=#{wordExt},status=#{status},create_date=#{createDate},
+        creator_id=#{creatorId},creator_name=#{creatorName},update_date=#{updateDate} 
+        where config_id=#{configId}
+    </update>
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+        create table IA_File_Ext_Config
+		(
+		   config_id            varchar(32) not null,
+		   file_count           int,
+		   expire_time          bigint comment '单位：毫秒',
+		   space_size           bigint comment '单位：byte',
+		   txt_ext              varchar(256) comment '以;分割',
+		   pdf_ext              varchar(256) comment '以;分割',
+		   html_ext             varchar(256) comment '以;分割',
+		   jpg_ext              varchar(256) comment '以;分割',
+		   word_ext             varchar(256) comment '以;分割',
+		   status               smallint comment '-1 删除1 正常',
+		   creator_id           varchar(32),
+		   creator_name         varchar(64),
+		   create_date          timestamp,
+		   update_date          timestamp,
+		   primary key (config_id)
+		);
+    </update>  
+</mapper>

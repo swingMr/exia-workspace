@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.ResourceTaskDao">
+	<resultMap id="ResourceTask" type="com.excellence.iamp.vo.ResourceTask">  
+	    <id column="task_id" property="taskId" jdbcType="VARCHAR" />  
+	    <result column="lib_num" property="libNum" jdbcType="VARCHAR" />  
+	    <result column="res_id" property="resId" jdbcType="VARCHAR" />
+	    <result column="res_title" property="resTitle" jdbcType="VARCHAR" />
+	    <result column="act_code" property="actCode" jdbcType="VARCHAR" /> 
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+	    <result column="expire_date" property="expireDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>    
+	</resultMap> 
+	
+	<sql id="conditionFragment">  
+		<where> 1 = 1
+			<if test="resTitle !='' and resTitle != null"> and res_title like "%"#{resTitle}"%"</if>
+			<if test="resId !='' and resId != null"> and res_id=#{resId} </if>
+			<if test="actCode !='' and actCode != null"> and act_code=#{actCode} </if>		
+			<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+			<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+		</where> 
+	</sql>  
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="ResourceTask">
+		select * from ia_resource_task where task_id=#{taskId}
+	</select>
+	
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.ResourceTask" >
+        insert into ia_resource_task(task_id,lib_num,res_id,res_title,act_code,create_date,creator_id,creator_name,expire_date)
+        values(#{taskId},#{libNum},#{resId},#{resTitle},#{actCode},#{createDate},#{creatorId},#{creatorName},#{expireDate});
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ia_resource_task
+        where task_id=#{taskId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.ResourceTask">
+        update ia_resource_task set
+        task_id=#{taskId},lib_num=#{libNum},res_id=#{resId},res_title=#{resTitle},act_code=#{actCode},create_date=#{createDate},
+        creator_id=#{creatorId},creator_name=#{creatorName},expire_date=#{expireDate}
+        where task_id=#{taskId}
+    </update>
+    
+    <select id="getByCondition" resultMap="ResourceTask">
+		select * from ia_resource_task
+		<include refid="conditionFragment" />
+	</select>
+	
+		<!-- 统计总数 -->
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_resource_task
+		<include refid="conditionFragment" />
+	</select>
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+	        create table IA_Resource_task
+			(
+			   task_id              varchar(32) not null comment '任务id',
+			   lib_num              varchar(32) not null comment '资源库编号',
+			   res_title            varchar(512) not null comment '资源标题',
+			   res_id               varchar(32) not null comment '资源id',
+			   act_code             varchar(32) not null comment '包括：
+			            删除全文索引  del_index
+			            更新全文索引 update_index
+			            打标签 update_tag
+			            打标签并更新索引 update_tag_index',
+			   creator_id           varchar(32) not null comment '创建人id',
+			   creator_name         varchar(64) not null comment '创建人名称',
+			   create_date          timestamp not null comment '创建时间',
+			   expire_date          timestamp not null comment '过期时间',
+			   primary key (task_id)
+			);
+    </update>  
+</mapper>

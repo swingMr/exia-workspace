@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+  <wcm>
+    <protocol>http</protocol>
+    <host>10.1.6.63:8088</host>
+    <discription>拓尔思内容协作平台</discription>
+  </wcm>
+</root>

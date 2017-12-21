@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 --> 
+<mapper namespace="com.excellence.iamp.dao.RobotDefDao">
+	<resultMap id="RobotDef" type="com.excellence.iamp.robot.vo.RobotDef">  
+	    <id column="ROBOT_ID" property="robotId" jdbcType="VARCHAR" />  
+	    <result column="ROBOT_CODE" property="robotCode" jdbcType="VARCHAR" />  
+	    <result column="ROBOT_NAME" property="robotName" jdbcType="VARCHAR" />  
+	    <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />  
+	    <result column="SERVICE_GREETING" property="serviceGreeting" jdbcType="VARCHAR" />  
+	    <result column="SERVICE_TIME" property="serviceTime" jdbcType="VARCHAR" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" /> 
+ 	    <result column="REMARK" property="remark" jdbcType="VARCHAR" />  
+ 	    <result column="app_name" property="appName" jdbcType="VARCHAR" />  
+	</resultMap> 
+	
+ 	<sql id="conditionFragment">  
+		<where> 1=1
+			<if test="robotId !='' and robotId != null">and ROBOT_ID=#{robotId}</if>		
+			<if test="robotCode !='' and robotCode != null">and ROBOT_CODE = #{robotCode}</if>		
+			<if test="appCode !='' and appCode != null">and app_CODE = #{appCode}</if>		
+			<if test="robotName !='' and robotName != null">and ROBOT_NAME like "%"#{robotName}"%"</if>		
+			<if test="serviceGreeting !='' and serviceGreeting != null">and SERVICE_GREETING=#{serviceGreeting}</if>		
+			<if test="serviceTime !='' and serviceTime != null">and SERVICE_TIME=#{serviceTime}</if>		
+			<if test="createDate !='' and createDate != null">and create_date=#{createDate}</if>
+			<if test="remark !='' and remark != null">and remark=#{remark}</if>		
+			<if test="appName !='' and appName != null">and app_name=#{appName}</if>		
+		</where> 
+	</sql>  
+	
+	<select id="findById" resultMap="RobotDef" parameterType="java.lang.String" >
+	    select 
+	    ROBOT_ID,ROBOT_CODE,ROBOT_NAME,SERVICE_GREETING,SERVICE_TIME,create_date,remark,app_name,app_code
+	    from ia_robot_def
+	    where robot_id = #{robotId,jdbcType=VARCHAR}
+	    order by create_date desc
+	  </select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.excellence.iamp.robot.vo.RobotDef">
+        insert into ia_robot_def 
+        (
+        	app_name,app_code,ROBOT_ID,ROBOT_CODE,ROBOT_NAME,SERVICE_GREETING,SERVICE_TIME,create_date,remark     )
+        values 
+        (
+	        #{appName,jdbcType=VARCHAR},#{appCode,jdbcType=VARCHAR},#{robotId,jdbcType=VARCHAR},#{robotCode,jdbcType=VARCHAR}, #{robotName,jdbcType=VARCHAR},#{serviceGreeting,jdbcType=VARCHAR},
+	        #{serviceTime,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}     
+	     )
+    </insert>
+    
+    <!-- 更新 -->
+	<update id="update" parameterType="com.excellence.iamp.robot.vo.RobotDef">
+		UPDATE ia_robot_def SET
+		ROBOT_CODE=#{robotCode,jdbcType=VARCHAR},
+		ROBOT_NAME=#{robotName,jdbcType=VARCHAR},
+		SERVICE_GREETING=#{serviceGreeting,jdbcType=VARCHAR},
+		SERVICE_TIME=#{serviceTime,jdbcType=VARCHAR},
+		create_date=#{createDate,jdbcType=TIMESTAMP},
+		remark=#{remark,jdbcType=VARCHAR},
+		app_name=#{appName,jdbcType=VARCHAR},
+		app_code=#{appCode,jdbcType=VARCHAR}
+		WHERE
+		ROBOT_ID=#{robotId,jdbcType=VARCHAR}
+	</update>
+    
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+		DELETE FROM ia_robot_def 
+		WHERE
+		ROBOT_ID=#{robotId}
+	</delete> 
+	
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_robot_def
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="RobotDef">
+		select * from ia_robot_def
+		<include refid="conditionFragment" />
+		order by CREATE_DATE desc
+   </select>
+</mapper>

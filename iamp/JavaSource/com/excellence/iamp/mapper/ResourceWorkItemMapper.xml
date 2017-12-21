@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.ResourceWorkItemDao">
+	<resultMap id="ResourceWorkItem" type="com.excellence.iamp.vo.ResourceWorkItem">  
+	    <id column="workitem_id" property="workItemId" jdbcType="VARCHAR" />  
+	    <result column="res_id" property="resId" jdbcType="VARCHAR" />  
+	    <result column="channel_id" property="channelId" jdbcType="VARCHAR" />  
+	    <result column="res_title" property="resTitle" jdbcType="VARCHAR" />
+	    <result column="res_prop" property="resProp" jdbcType="VARCHAR" />  
+	    <result column="res_content" property="resContent" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="db_code" property="dbCode" jdbcType="VARCHAR" />
+	    <result column="work_status" property="workStatus" jdbcType="SMALLINT" />
+	    <result column="act_code" property="actCode" jdbcType="VARCHAR" /> 
+	    <result column="belong_domain" property="belongDomain" jdbcType="VARCHAR" />
+	    <result column="key_word" property="keyWord" jdbcType="VARCHAR" />
+	    <result column="act_user_id" property="actUserId" jdbcType="VARCHAR" />
+	    <result column="act_user_name" property="actUserName" jdbcType="VARCHAR" />  
+	    <result column="complete_date" property="completeDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>    
+	</resultMap> 
+	
+	<sql id="conditionFragment">  
+		<where> 1 = 1
+			<if test="resTitle !='' and resTitle != null"> and res_title like "%"#{resTitle}"%"</if>
+			<if test="resId !='' and resId != null"> and res_id=#{resId} </if>
+			<if test="dbCode !='' and dbCode != null"> and db_code=#{dbCode} </if>
+			<if test="actCode !='' and actCode != null"> and act_code=#{actCode} </if>		
+			<if test="belongDomain !='' and belongDomain != null"> and belong_domain  like "%"#{belongDomain}"%"</if>
+			<if test="workStatus != null"> and work_status=#{workStatus} </if>
+			<if test="workStatus == null"> and work_status > 0 </if>
+			<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+			<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+		</where> 
+	</sql>  
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="ResourceWorkItem">
+		select * from ia_res_workitem where workitem_id=#{workItemId}
+	</select>
+	
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.ResourceWorkItem" >
+        insert into ia_res_workitem(workitem_id,res_id,channel_id,res_title,res_prop,res_content,create_date,db_code,work_status,act_code,belong_domain,key_word,act_user_id,act_user_name,complete_date)
+        values(#{workItemId},#{resId},#{channelId},#{resTitle},#{resProp},#{resContent},#{createDate},#{dbCode},#{workStatus},#{actCode},#{belongDomain},#{keyWord},#{actUserId},#{actUserName},#{completeDate});
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ia_res_workitem
+        where workitem_id=#{workItemId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.ResourceWorkItem">
+        update ia_res_workitem set
+        workitem_id=#{workItemId},res_id=#{resId},channel_id=#{channelId},res_title=#{resTitle},res_prop=#{resProp},res_content=#{resContent},create_date=#{createDate},
+        db_code=#{dbCode},work_status=#{workStatus},act_code=#{actCode},belong_domain=#{belongDomain},key_word=#{keyWord},act_user_id=#{actUserId},act_user_name=#{actUserName},complete_date=#{completeDate}
+        where workitem_id=#{workItemId}
+    </update>
+    
+    <select id="getByCondition" resultMap="ResourceWorkItem">
+		select * from ia_res_workitem
+		<include refid="conditionFragment" />
+	</select>
+	
+		<!-- 统计总数 -->
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_res_workitem
+		<include refid="conditionFragment" />
+	</select>
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+	        create table IA_Res_Workitem
+			(
+			   workitem_id          varchar(32) not null,
+			   res_id               varchar(32) comment '资源唯一标识',
+			   channel_id           varchar(32),
+			   res_title            varchar(512) not null,
+			   res_prop             longtext comment '资源的属性内容',
+			   res_content          longtext comment '待入库资源的文本/HTML内容',
+			   create_date          timestamp comment '工作项的创建时间',
+			   db_code              varchar(64) comment 'wcmmetatableflfg--法律法规库
+						            wcmmetatablepartyliterature--党的文献库
+						            wcmmetatabletechnicalstandard--技术标准库
+						            wcmmetatablespecialpolicy--专项政策库
+						            wcmmetatablescientificresearch--科学研究库
+						            wcmmetatablepublicopinion--媒体资讯库
+						            wcmmetatableleadershipinstruction--领导指示库
+						            wcmmetatabletypicalevents--典型事件库
+						            wcmmetatableforeignresources--国外资源库',
+			   work_status          int comment '1——待处理  9——已完成',
+			   act_code             varchar(64) comment '工作项对应的行为代码
+			            ',
+			   belong_domain        varchar(128) comment '信息资源归属领域的名称，以";"作为分割符号',
+			   key_word             varchar(1024) comment '信息资源对应的主题词',
+			   complete_date        timestamp,
+			   act_user_id          varchar(64) comment '完成该项工作的用户ID',
+			   act_user_name        varchar(64),
+			   primary key (workitem_id)
+			);
+    </update>  
+</mapper>

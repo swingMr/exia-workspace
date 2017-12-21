@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.IFileDao">
+	<resultMap id="IFile" type="com.excellence.iamp.vo.IFile">  
+	    <id column="file_id" property="fileId" jdbcType="VARCHAR" />  
+	    <result column="file_ext" property="fileExt" jdbcType="VARCHAR" />  
+	    <result column="file_name" property="fileName" jdbcType="VARCHAR" />  
+	    <result column="access_path" property="accessPath" jdbcType="VARCHAR" />  
+	    <result column="is_temp" property="isTemp" jdbcType="SMALLINT" /> 
+	    <result column="expire_date" property="expireDate" jdbcType="TIMESTAMP" /> 
+	    <result column="status" property="status" jdbcType="SMALLINT" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />    
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />   
+	</resultMap> 
+	
+	<sql id="conditionFragment">  
+		<where> 1 = 1
+			<if test="isTemp  != null"> and is_temp =#{isTemp}</if>
+			<if test="status != null"> and status=#{status} </if>
+			<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+			<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+		</where> 
+	</sql> 
+	
+	 <select id="getByCondition" parameterType="java.util.Map" resultMap="IFile">
+		select * from ia_file
+		<include refid="conditionFragment" />
+	</select>
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="IFile">
+		select * from ia_file where file_id=#{fileId}
+	</select>
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.IFile" >
+        insert into ia_file(file_id,file_ext,file_name,access_path,is_temp,expire_date,status,create_date,creator_id,creator_name,update_date)
+        values(#{fileId},#{fileExt},#{fileName},#{accessPath},#{isTemp},#{expireDate},#{status},#{createDate},#{creatorId},#{creatorName},#{updateDate});
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ia_file
+        where file_id=#{fileId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.IFile">
+        update ia_file set
+        file_id=#{fileId},file_ext=#{fileExt},file_name=#{fileName},access_path=#{accessPath},is_temp=#{isTemp},expire_date=#{expireDate},status=#{status},create_date=#{createDate},
+        creator_id=#{creatorId},creator_name=#{creatorName},update_date=#{updateDate} 
+        where file_id=#{fileId}
+    </update>
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+        create table IA_File
+		(
+		   file_id              varchar(32) not null,
+		   file_name            varchar(128) not null,
+		   file_ext             varchar(32) not null,
+		   access_path          varchar(128) not null,
+		   is_temp              smallint comment '1 临时文件
+		            0 非临时文件
+		            ',
+		   status               smallint comment '-1 删除
+		            1 正常',
+		   creator_id           varchar(32),
+		   creator_name         varchar(64),
+		   update_date          timestamp,
+		   create_date          timestamp,
+		   expire_date          timestamp,
+		   primary key (file_id)
+		);
+    </update>  
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 --> 
+<mapper namespace="com.excellence.iamp.dao.ChatSessionDao">
+	<resultMap id="ChatSession" type="com.excellence.iamp.robot.vo.ChatSession">  
+	    <id column="SESSION_ID" property="sessionId" jdbcType="VARCHAR" />  
+	    <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />  
+	    <result column="ROBOT_CODE" property="robotCode" jdbcType="VARCHAR" />  
+	    <result column="MEMBER_ID" property="memberId" jdbcType="VARCHAR" />  
+	    <result column="MEMBER_ACCOUNT" property="memberAccount" jdbcType="VARCHAR" />  
+	    <result column="MEMBER_NAME" property="memberName" jdbcType="VARCHAR" />  
+	    <result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />   
+	    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />  
+	    <result column="EFFECTIVE_TIME" property="effectiveTime" jdbcType="TIMESTAMP" />  
+ 	    <result column="SESSION_STATUS" property="sessionStatus" jdbcType="SMALLINT" />  
+	</resultMap> 
+	
+ 	<sql id="conditionFragment">  
+		<where> 1=1
+			<if test="sessionId !='' and sessionId != null">and SESSION_ID=#{sessionId}</if>		
+			<if test="appCode !='' and appCode != null">and APP_CODE = #{appCode}</if>		
+			<if test="robotCode !='' and robotCode != null">and ROBOT_CODE = #{robotCode}</if>		
+			<if test="memberId !='' and memberId != null">and MEMBER_ID=#{memberId}</if>		
+			<if test="memberAccount !='' and memberAccount != null">and MEMBER_ACCOUNT=#{memberAccount}</if>		
+			<if test="memberName !='' and memberName != null">and MEMBER_NAME=#{memberName}</if>		
+			<if test="clientIp !='' and clientIp != null">and CLIENT_IP=#{clientIp}</if>		
+			<if test="createDate !='' and createDate != null">and CREATE_DATE=#{createDate}</if>		
+			<if test="effectiveTime !='' and effectiveTime != null">and EFFECTIVE_TIME=#{effectiveTime}</if>		
+			<if test="sessionStatus !='' and sessionStatus != null">and SESSION_STATUS=#{sessionStatus}</if>	
+		</where> 
+	</sql>  
+	
+	<select id="findById" resultMap="ChatSession" parameterType="java.lang.String" >
+    select 
+    SESSION_ID,APP_CODE,ROBOT_CODE,MEMBER_ID,MEMBER_ACCOUNT,MEMBER_NAME,CLIENT_IP,CREATE_DATE,EFFECTIVE_TIME,SESSION_STATUS
+    from ia_chat_session
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+    order by CREATE_DATE desc
+  </select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.excellence.iamp.robot.vo.ChatSession">
+        insert into ia_chat_session 
+        (
+        	SESSION_ID,APP_CODE,ROBOT_CODE,MEMBER_ID,MEMBER_ACCOUNT,MEMBER_NAME,CLIENT_IP,CREATE_DATE,EFFECTIVE_TIME,SESSION_STATUS)
+        values 
+        (
+	        #{sessionId,jdbcType=VARCHAR},#{appCode,jdbcType=VARCHAR}, #{robotCode,jdbcType=VARCHAR},#{memberId,jdbcType=VARCHAR},
+	        #{memberAccount,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR},#{clientIp,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP} 
+	        , #{effectiveTime,jdbcType=TIMESTAMP} , #{sessionStatus,jdbcType=SMALLINT}  
+	     )
+    </insert>
+    
+    <!-- 更新 -->
+	<update id="update" parameterType="com.excellence.iamp.robot.vo.ChatSession">
+		UPDATE ia_chat_session SET
+		APP_CODE=#{appCode,jdbcType=VARCHAR},
+		ROBOT_CODE=#{robotCode,jdbcType=VARCHAR},
+		MEMBER_ID=#{memberId,jdbcType=VARCHAR},
+		MEMBER_ACCOUNT=#{memberAccount,jdbcType=VARCHAR},
+		MEMBER_NAME=#{memberName,jdbcType=VARCHAR},
+		CLIENT_IP=#{clientIp,jdbcType=VARCHAR},
+		CREATE_DATE=#{createDate,jdbcType=TIMESTAMP},
+		EFFECTIVE_TIME=#{effectiveTime,jdbcType=TIMESTAMP},
+		SESSION_STATUS=#{sessionStatus,jdbcType=SMALLINT}
+		WHERE
+		SESSION_ID=#{sessionId,jdbcType=VARCHAR}
+	</update>
+    
+	<!-- 删除 -->
+    <delete id="delById" parameterType="java.lang.String">
+		DELETE FROM ia_chat_session 
+		WHERE
+		SESSION_ID=#{sessionId}
+	</delete> 
+
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_chat_session
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="ChatSession">
+		select * from ia_chat_session
+		<include refid="conditionFragment" />
+		order by CREATE_DATE desc
+   </select>
+</mapper>

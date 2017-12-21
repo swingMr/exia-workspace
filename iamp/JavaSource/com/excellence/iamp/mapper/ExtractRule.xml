@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.ExtractRuleDao">
+	<resultMap id="ExtractRule" type="com.excellence.iamp.vo.ExtractRule">  
+	    <id column="rule_id" property="ruleId" jdbcType="VARCHAR" />  
+	    <result column="genre" property="genre" jdbcType="VARCHAR" />
+	    <result column="rule_content" property="ruleContent" jdbcType="VARCHAR" />   
+	    <result column="file_type" property="fileType" jdbcType="VARCHAR" />  
+	    <result column="status" property="status" jdbcType="SMALLINT" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>    
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />   
+	</resultMap> 
+	
+	<sql id="conditionFragment">  
+		<where> 1 = 1
+			<if test="ruleId !='' and ruleId != null">rule_id=#{ruleId}</if>
+			<if test="genre !='' and genre != null"> and genre=#{genre} </if>
+			<if test="fileType !='' and fileType != null"> and file_type=#{fileType}</if>	
+		</where> 
+	</sql>  
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="ExtractRule">
+		select * from IA_Extract_Rule where rule_id=#{ruleId}
+	</select>
+	<select id="findByGenreAndFiletype" resultMap="ExtractRule">
+		select * from IA_Extract_Rule where genre = #{genre} and file_type = #{fileType} and status > 0
+	</select>
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.ExtractRule" >
+        insert into IA_Extract_Rule(rule_id,genre,rule_content,file_type,status,create_date,creator_id,creator_name,update_date)
+        values(#{ruleId},#{genre},#{ruleContent},#{fileType},#{status},#{createDate},#{creatorId},#{creatorName},#{updateDate});
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ia_app
+        where rule_id=#{ruleId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.ExtractRule">
+        update IA_Extract_Rule set
+        rule_id=#{ruleId},genre=#{genre},rule_content=#{ruleContent},file_type=#{fileType},status=#{status},create_date=#{createDate},
+        creator_id=#{creatorId},creator_name=#{creatorName},update_date=#{updateDate}
+        where rule_id=#{ruleId}
+    </update>
+    
+    <select id="getByCondition" resultMap="ExtractRule">
+		select * from IA_Extract_Rule
+		<include refid="conditionFragment" />
+	</select>
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+        create table IA_Extract_Rule
+		(
+		   rule_id              varchar(32) not null,
+		   genre                varchar(64),
+		   rule_content         longtext comment '以;进行分割',
+		   file_type            varchar(32),
+		   status               smallint comment '1.运行 0 停止 -1禁用',
+		   create_date          timestamp,
+		   creator_id           varchar(32),
+		   creator_name         varchar(64),
+		   update_date          timestamp,
+		   primary key (rule_id)
+		);	
+    </update>  
+</mapper>

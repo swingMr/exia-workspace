@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 -->
+<mapper namespace="com.excellence.iamp.dao.AppDao">
+	<resultMap id="App" type="com.excellence.iamp.vo.App">  
+	    <id column="app_id" property="appId" jdbcType="VARCHAR" />  
+	    <result column="app_name" property="appName" jdbcType="VARCHAR" />
+	    <result column="app_unit" property="appUnit" jdbcType="VARCHAR" />   
+	    <result column="app_code" property="appCode" jdbcType="VARCHAR" />  
+	    <result column="app_pwd" property="appPwd" jdbcType="VARCHAR" />  
+	    <result column="expire_date" property="expireDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/> 
+	    <result column="status" property="status" jdbcType="SMALLINT" />  
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>    
+	    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />  
+	    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />   
+ 	    <result column="restrict_ip" property="restrictIp" jdbcType="VARCHAR" />  
+ 	    <result column="remark" property="remark" jdbcType="VARCHAR" />  
+ 	    <result column="token" property="token" jdbcType="VARCHAR" />  
+	</resultMap> 
+	
+	<sql id="conditionFragment">  
+		<where> 1 = 1
+			<if test="appName !='' and appName != null"> and app_name like "%"#{appName}"%"</if>
+			<if test="appCode !='' and appCode != null"> and app_code=#{appCode} </if>	
+			<if test="appPwd !='' and appPwd != null"> and app_pwd=#{appPwd} </if>
+			<if test="status != null"> and status=#{status} </if>
+			<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+			<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+			<if test="token != null and token != ''"> #{token}  </if>
+		</where> 
+	</sql>  
+	
+	<select id="findById" parameterType="java.lang.String" resultMap="App">
+		select * from ia_app where app_id=#{appId}
+	</select>
+	<select id="findByAppCode" parameterType="java.lang.String" resultMap="App">
+		select * from ia_app where app_code=#{appCode}
+	</select>
+	<select id="findByCodeAndPwd" resultMap="App">
+		select * from ia_app where app_code = #{appCode} and app_pwd = #{appPwd} and status > 0
+	</select>
+	 <!-- 插入-->
+    <insert id="insert" parameterType="com.excellence.iamp.vo.App" >
+        insert into ia_app(app_id,app_unit,app_name,app_code,app_pwd,expire_date,status,create_date,creator_id,creator_name,restrict_ip,remark,update_date,token)
+        values(#{appId},#{appUnit},#{appName},#{appCode},#{appPwd},#{expireDate},#{status},#{createDate},#{creatorId},#{creatorName},#{restrictIp},#{remark},#{updateDate},#{token});
+    </insert>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ia_app
+        where app_id=#{appId}
+    </delete>
+   
+    <!-- 更新 -->
+    <update id="update" parameterType="com.excellence.iamp.vo.App">
+        update ia_app set
+        app_id=#{appId},app_unit=#{appUnit},app_name=#{appName},app_code=#{appCode},app_pwd=#{appPwd},expire_date=#{expireDate},status=#{status},create_date=#{createDate},
+        creator_id=#{creatorId},creator_name=#{creatorName},restrict_ip=#{restrictIp},remark=#{remark},update_date=#{updateDate},token=#{token}
+        where app_id=#{appId}
+    </update>
+    
+    <select id="getByCondition" parameterType="java.util.Map" resultMap="App">
+		select * from ia_app
+		<include refid="conditionFragment" />
+	</select>
+		<!-- 统计总数 -->
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_app
+		<include refid="conditionFragment" />
+	</select>
+	
+	
+	<update id="createNewTable" parameterType="java.lang.String">  
+        create table IA_App
+			(
+			   app_id               varchar(32) not null,
+			   app_name             varchar(64) not null,
+			   app_unit             varchar(128) not null,
+			   app_code             varchar(32) not null,
+			   app_pwd              varchar(32) not null,
+			   expire_date          timestamp,
+			   create_date          timestamp,
+			   update_date          timestamp,
+			   status               smallint comment '-1删除 1正常',
+			   restrict_ip          varchar(2048) comment '以;进行分割',
+			   remark               varchar(2048),
+			   creator_id           varchar(32),
+			   creator_name         varchar(64),
+			   token                varchar(128)
+			   primary key (app_id)
+			);
+    </update>  
+</mapper>

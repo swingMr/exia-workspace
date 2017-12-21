@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.excellence.iamp.dao.TaskDao" >
+  <resultMap id="BaseResultMap" type="com.excellence.iamp.vo.Task" >
+    <id column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+    <result column="task_time" property="taskTime" jdbcType="VARCHAR" />
+    <result column="task_params" property="taskParams" jdbcType="VARCHAR" />
+    <result column="task_type" property="taskType" jdbcType="SMALLINT" />
+    <result column="access_path" property="accessPath" jdbcType="VARCHAR" />
+    <result column="task_group" property="taskGroup" jdbcType="VARCHAR" />
+    <result column="trigger_name" property="triggerName" jdbcType="VARCHAR" />
+    <result column="trigger_group" property="triggerGroup" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    task_id, task_name, task_time, task_params, task_type, access_path, task_group, trigger_name,trigger_group,remark, status, 
+    create_date, creator_id, creator_name, update_date,start_time,end_time
+  </sql>
+  
+  <sql id="conditionFragment">  
+		<where> 1 = 1
+			<include refid="condition" />
+		</where> 
+	</sql> 
+	
+	<sql id="condition">
+		<if test="taskId !='' and taskId != null"> and task_id=#{taskId} </if>	
+		<if test="taskName !='' and taskName != null"> and task_time like "%"#{taskName}"%" </if>	
+		<if test="taskGroup !='' and taskGroup != null"> and task_group=#{taskGroup} </if>	
+		<if test="taskParams !='' and taskParams != null"> and task_params=#{taskParams} </if>	
+		<if test="taskType !='' and taskType != null"> and task_type=#{taskType} </if>	
+		<if test="triggerName !='' and triggerName != null"> and trigger_name=#{triggerName} </if>	
+		<if test="triggerGroup !='' and triggerGroup != null"> and trigger_group=#{triggerGroup} </if>	
+		<if test="accessPath !='' and accessPath != null"> and access_path =#{accessPath} </if>
+		<if test="regularTime !='' and regularTime != null"> and regular_time=#{regularTime} </if>
+		<if test="status !='' and status != null"> and status =#{status} </if>
+		<if test="remark !='' and remark != null"> and remark =#{remark}</if>
+		<if test="startTime !='' and startTime != null"> and create_date &gt;= #{startTime}</if>
+		<if test="endTime !='' and endTime != null"> and create_date &lt;= #{endTime}</if>
+		<if test="orderBy != null and orderBy != ''"> order by #{orderBy}</if>
+		<if test="orderDirection != null and orderDirection != ''"> #{orderDirection}  </if>
+	</sql>
+  
+  
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ia_task
+    where task_id = #{taskId,jdbcType=VARCHAR}
+    order by create_date desc
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from ia_task
+    where task_id = #{taskId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.excellence.iamp.vo.Task" >
+    insert into ia_task (task_id, task_name, task_time,task_params,task_group, trigger_name,trigger_group, 
+      task_type, access_path,
+      remark, status, create_date, 
+      creator_id, creator_name, update_date,start_time,end_time
+      )
+    values (#{taskId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, #{taskTime,jdbcType=VARCHAR}, #{taskParams,jdbcType=VARCHAR}, #{taskGroup,jdbcType=VARCHAR},
+      #{triggerName,jdbcType=SMALLINT}, #{triggerGroup,jdbcType=VARCHAR},
+      #{taskType,jdbcType=SMALLINT}, #{accessPath,jdbcType=VARCHAR},  
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{creatorId,jdbcType=VARCHAR}, #{creatorName,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
+      #{startTime,jdbcType=VARCHAR},#{endTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.excellence.iamp.vo.Task" >
+    insert into ia_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="taskName != null" >
+        task_name,
+      </if>
+      <if test="taskTime != null" >
+        task_time,
+      </if>
+      <if test="taskParams != null" >
+        task_params,
+      </if>
+      <if test="taskType != null" >
+        task_type,
+      </if>
+      <if test="accessPath != null" >
+        access_path,
+      </if>
+      <if test="taskGroup != null" >
+        task_group,
+      </if>
+      <if test="triggerName != null" >
+        trigger_name,
+      </if>
+      <if test="triggerGroup != null" >
+        trigger_group,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="creatorName != null" >
+        creator_name,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null" >
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTime != null" >
+        #{taskTime,jdbcType=VARCHAR},
+      </if>
+      <if test="taskParams != null" >
+        #{taskParams,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null" >
+        #{taskType,jdbcType=SMALLINT},
+      </if>
+      <if test="accessPath != null" >
+        #{accessPath,jdbcType=VARCHAR},
+      </if>
+      <if test="taskGroup != null" >
+        #{taskGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerName != null" >
+        #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerGroup != null" >
+        #{triggerGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.excellence.iamp.vo.Task" >
+    update ia_task
+    <set >
+      <if test="taskName != null" >
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTime != null" >
+        task_time = #{taskTime,jdbcType=VARCHAR},
+      </if>
+      <if test="taskParams != null" >
+        task_params = #{taskParams,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null" >
+        task_type = #{taskType,jdbcType=SMALLINT},
+      </if>
+      <if test="accessPath != null" >
+        access_path = #{accessPath,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerName != null" >
+        trigger_name = #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerGroup != null" >
+        trigger_group = #{triggerGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPath != null" >
+        access_path = #{accessPath,jdbcType=VARCHAR},
+      </if>
+      <if test="taskGroup != null" >
+        task_group = #{taskGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorName != null" >
+        creator_name = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where task_id = #{taskId,jdbcType=VARCHAR}
+  </update>
+  <update id="update" parameterType="com.excellence.iamp.vo.Task" >
+    update ia_task
+    set task_name = #{taskName,jdbcType=VARCHAR},
+      task_time = #{taskTime,jdbcType=VARCHAR},
+      task_params = #{taskParams,jdbcType=VARCHAR},
+      task_type = #{taskType,jdbcType=SMALLINT},
+      access_path = #{accessPath,jdbcType=VARCHAR},
+      task_group = #{taskGroup,jdbcType=VARCHAR},
+      trigger_name = #{triggerName,jdbcType=VARCHAR},
+      trigger_group = #{triggerGroup,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      creator_name = #{creatorName,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR}
+    where task_id = #{taskId,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_task
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="BaseResultMap">
+		select * from ia_task
+		<include refid="conditionFragment" />
+		order by create_date desc
+   </select>
+</mapper>

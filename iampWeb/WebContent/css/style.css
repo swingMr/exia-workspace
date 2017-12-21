@@ -1,0 +1,157 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	background-color: #1C77AC;
+	margin: 0px;
+	overflow: hidden;
+	text-align: center;
+	text-align: center;
+	position: relative;
+}
+a {
+	 text-decoration:none;
+}
+
+ul,li{
+	list-style-type:none;
+	margin: 0;
+padding: 0;
+}
+
+.box {
+	width: 100%;
+	height: 500px;
+	z-index: 10000;
+	margin: 0 auto;
+	position: absolute;
+	top: 0;
+}
+
+
+.login-top{
+	height:50px;
+	width: 100%;
+	background: #14547A;
+	
+	color: #fff;
+	line-height: 50px;
+	font-size: 13px;
+	margin: 0 0 150px 0;
+	
+}
+.login-top a{
+	color:fff;
+}
+.top-left{
+	float:left;
+	margin: 0 0 0 20px;
+}
+
+.top-right{
+	float:right;
+	margin: 0 20px 0 0px;
+	color: #fff;
+}
+
+.top-right a{
+	color: #fff;
+}
+
+.top-right a:hover{
+	color: #326696;
+}
+
+.login-box{
+	width: 680px;
+	height: 320px;
+	background: #fff;
+	margin: 0 auto;
+		-webkit-box-shadow:0 0 10px rgba(0, 0, 0, .4);  
+  -moz-box-shadow:0 0 10px rgba(0, 0, 0, .4);  
+  box-shadow:0 0 10px rgba(0, 0, 0, .4);
+	
+}
+
+.box-left{
+	width: 282px;
+	height: 320px;
+	float: left;
+}
+
+.box-right{
+	float: left;
+	margin: 30px;
+	text-align: left;
+	
+}
+.right-title{
+	height: 40px;
+	line-height: 40px;
+	
+}
+.right-title span{
+	font-size: 22px;
+	color: #1479C2;
+}
+
+.right-title spam{
+	font-size: 16px;
+	color: #888888;
+	margin: 0 0 0 10px
+}
+
+.login-input{
+	width: 334px;
+	
+}
+
+.login-input li{
+	position: relative;
+	margin: 20px 0;
+}
+
+.login-input li input{
+	width: 100%;
+	height: 40px;
+	border:1px solid #e2e2e2;
+	text-indent: 35px;
+	font-size: 14px;
+	
+}
+.name-icon{
+	position: absolute;
+	top:10px;
+	left:10px;
+	color:#C8C8C8;
+}
+
+.btn-login{
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background: #52A2F5;
+	border-radius: 4px;
+	margin: 30px 0 0 0;
+	letter-spacing: 4px;
+}
+
+.btn-login:hover{
+	background: #0E7FF0;
+}
+
+.btn-login a{
+	color:#fff;
+}
+
+.footer{
+	width: 100%;
+	height: 60px;
+	background-color:#428EBA;
+	line-height: 60px;
+	position: absolute;
+	bottom:0;
+	color:#fff;
+	font-size: 13px;
+	
+}

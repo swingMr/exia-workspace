@@ -1,0 +1,12 @@
+<cacheLog time='2017-10-09 17:48:41'>
+<hitRatio>
+	<tenant id='__DEFAULT'>
+		<group name='' hit='5' missed='1'>0.8333333</group>
+	</tenant>
+	<tenant id=''>
+		<group name='SAAS_TENANT' hit='0' missed='1'>0.0</group>
+	</tenant>
+</hitRatio>
+</cacheLog>
+
+

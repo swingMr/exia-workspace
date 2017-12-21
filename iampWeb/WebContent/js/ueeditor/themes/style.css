@@ -1,0 +1,78 @@
+
+/*共用样式*/
+ul li {
+	list-style: none;
+}
+.container{
+	width: 800px;
+	margin:0 auto 10px;
+	padding-left: 10px;
+	background-color:#efefef;
+	border-radius:10px;
+	padding: 20px;
+}
+.hidden {
+	display: none;
+}
+.inlineBlock {
+	display: inline-block;
+}
+
+/*悬浮窗样式*/
+.link {
+	cursor:pointer;
+	position: relative;
+	color: #ba2636;
+}
+.link:hover
+{
+background-color:yellow;
+}
+.modal {
+	position: absolute;
+	top: 10px;
+	left: 0;
+	z-index: 2;
+}
+.modal-content {
+	border: 1px solid #f40;
+	padding: 5px;
+	border-radius: 5px;
+	position: relative;
+	background: #fff;
+	font-size:12px;
+	color:#000000;
+	width:100px;
+	text-align: center;
+}
+.modal-content li {
+	white-space: nowrap;
+}
+/*三角形开始*/
+.modal-content:before {
+	content: "";   
+	position: absolute;   
+	top: -8px;   
+	left: 11px;   
+	width: 0;   
+	height: 0;   
+	border-left: 8px solid transparent;   
+	border-bottom: 8px solid #f40;   
+	border-right: 8px solid transparent;   
+}
+.modal-content:after {
+	content: "";   
+	position: absolute;   
+	top: -7px;   
+	left: 12px;   
+	width: 0;   
+	height: 0;   
+	border-left: 7px solid transparent;   
+	border-bottom: 7px solid #fff;   
+	border-right: 7px solid transparent;  
+}
+/*三角形结束*/
+
+.markParagraph{
+	border-bottom:1px solid red;
+}

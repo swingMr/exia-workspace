@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace空间名，对应我们定义的接口,做唯一标识的 --> 
+<mapper namespace="com.excellence.iamp.dao.ChatMsgDao">
+	<resultMap id="ChatMsg" type="com.excellence.iamp.robot.vo.ChatMsg">  
+	    <id column="MSG_ID" property="msgId" jdbcType="VARCHAR" />  
+	    <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />  
+	    <result column="SESSION_ID" property="sessionId" jdbcType="VARCHAR" />  
+	    <result column="SPEAKER_TYPE" property="speakerType" jdbcType="SMALLINT" />  
+	    <result column="SPEAKER_ID" property="speakerId" jdbcType="VARCHAR" />  
+	    <result column="SPEAKER_NAME" property="speakerName" jdbcType="VARCHAR" />  
+	    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" /> 
+ 	    <result column="MSG_TYPE" property="msgType" jdbcType="VARCHAR" />  
+ 	    <result column="TEXT_CONTENT" property="textContent" jdbcType="VARCHAR" />  
+ 	    <result column="ORIGINAL_CONTENT" property="originalContent" jdbcType="VARCHAR" />  
+ 	    <result column="ONTO_INFO" property="ontoInfo" jdbcType="VARCHAR" />  
+	</resultMap> 
+	
+ 	<sql id="conditionFragment">  
+		<where> 1=1
+			<if test="msgId !='' and msgId != null">and MSG_ID=#{msgId}</if>		
+			<if test="appCode !='' and appCode != null">and APP_CODE = #{appCode}</if>		
+			<if test="sessionId !='' and sessionId != null">and SESSION_ID = #{sessionId}</if>		
+			<if test="speakerType !='' and speakerType != null">and SPEAKER_TYPE=#{speakerType}</if>		
+			<if test="speakerId !='' and speakerId != null">and SPEAKER_ID=#{speakerId}</if>		
+			<if test="speakerName !='' and speakerName != null">and SPEAKER_NAME=#{speakerName}</if>		
+			<if test="createTime !='' and createTime != null">and CREATE_TIME=#{createTime}</if>
+			<if test="msgType !='' and msgType != null">and MSG_TYPE=#{msgType}</if>		
+			<if test="textContent !='' and textContent != null">and TEXT_CONTENT=#{textContent}</if>		
+			<if test="originalContent !='' and originalContent != null">and ORIGINAL_CONTENT=#{originalContent}</if>		
+		</where> 
+	</sql>  
+	
+	<select id="findById" resultMap="ChatMsg" parameterType="java.lang.String" >
+    select 
+    MSG_ID,APP_CODE,SESSION_ID,SPEAKER_TYPE,SPEAKER_ID,SPEAKER_NAME,CREATE_TIME,MSG_TYPE,TEXT_CONTENT,ORIGINAL_CONTENT,ONTO_INFO
+    from ia_chat_msg
+    where msg_id = #{msgId,jdbcType=VARCHAR}
+    order by create_time desc
+  </select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.excellence.iamp.robot.vo.ChatMsg">
+        insert into ia_chat_msg 
+        (
+        	MSG_ID,APP_CODE,SESSION_ID,SPEAKER_TYPE,SPEAKER_ID,SPEAKER_NAME,CREATE_TIME,MSG_TYPE,TEXT_CONTENT,ORIGINAL_CONTENT,ONTO_INFO)
+        values 
+        (
+	        #{msgId,jdbcType=VARCHAR},#{appCode,jdbcType=VARCHAR}, #{sessionId,jdbcType=VARCHAR},#{speakerType,jdbcType=SMALLINT},
+	        #{speakerId,jdbcType=VARCHAR}, #{speakerName,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{msgType,jdbcType=VARCHAR} 
+	        , #{textContent,jdbcType=VARCHAR} , #{originalContent,jdbcType=VARCHAR}, #{ontoInfo,jdbcType=VARCHAR}
+	     )
+    </insert>
+    
+    <!-- 更新 -->
+	<update id="update" parameterType="com.excellence.iamp.robot.vo.ChatMsg">
+		UPDATE ia_chat_msg SET
+		APP_CODE=#{appCode,jdbcType=VARCHAR},
+		SESSION_ID=#{sessionId,jdbcType=VARCHAR},
+		SPEAKER_TYPE=#{speakerType,jdbcType=SMALLINT},
+		SPEAKER_ID=#{speakerId,jdbcType=VARCHAR},
+		SPEAKER_NAME=#{speakerName,jdbcType=VARCHAR},
+		CREATE_TIME=#{createTime,jdbcType=TIMESTAMP},
+		MSG_TYPE=#{msgType,jdbcType=VARCHAR},
+		TEXT_CONTENT=#{textContent,jdbcType=VARCHAR},
+		ORIGINAL_CONTENT=#{originalContent,jdbcType=VARCHAR},
+		ONTO_INFO=#{ontoInfo,jdbcType=VARCHAR}
+		WHERE
+		MSG_ID=#{msgId,jdbcType=VARCHAR}
+	</update>
+    
+	<!-- 删除 -->
+    <delete id="delById" parameterType="java.lang.String">
+		DELETE FROM ia_chat_msg 
+		WHERE
+		MSG_ID=#{msgId}
+	</delete> 
+
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(1) from ia_chat_msg
+		<include refid="conditionFragment" />
+	</select>
+	<select id="getByCondition" resultMap="ChatMsg">
+		select * from ia_chat_msg
+		<include refid="conditionFragment" />
+		order by create_time desc
+   </select>
+
+</mapper>
